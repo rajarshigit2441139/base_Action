@@ -47,7 +47,7 @@ runs:
       id: extract
       shell: bash
       run: |
-        version=$(awk -F'-' '{ sub(/^v/, "", $2); print $2 }' "${{ inputs.context }}${{ inputs.dockerfile }}")
+        version=$(awk -F ':' '/^FROM node/ {print $2}' |  awk -F '-' '{print $1}' "${{ inputs.context }}${{ inputs.dockerfile }}")
         echo "Extracted version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
 
