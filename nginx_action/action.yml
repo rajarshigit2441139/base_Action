@@ -49,7 +49,7 @@ runs:
       id: extract
       shell: bash
       run: |
-        version=$(awk -F '[: -]' '/^FROM nginx/ {print $2}' "${{ inputs.dockerfile }}")
+        version=$(awk -F '[: -]' '/^FROM nginx/ {print $3}' "${{ inputs.dockerfile }}")
         echo "Extracted version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
 
