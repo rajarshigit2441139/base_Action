@@ -49,18 +49,8 @@ runs:
       id: extract
       shell: bash
       run: |
-        version=$(awk -v regex="${{ inputs.nginx_regex }}" '
-          {
-            if ($0 ~ regex) {
-              match($0, regex, m)
-              print m[1]
-              exit
-            }
-          }' "${{ inputs.dockerfile }}")
-        if [ -z "$version" ]; then
-          echo "Failed to extract Nginx version"
-          exit 1
-        fi
+        version=$(awk -F '[: -]' '/^FROM nginx/ {print $2}' "${{ inputs.dockerfile }}")
+        echo "Extracted version: $version"
         echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Build using shared logic
