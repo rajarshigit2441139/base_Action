@@ -1,0 +1,42 @@
+name: "Create and Push Git Tag"
+description: "Creates and pushes a Git tag from a provided tag input"
+
+inputs:
+  tag:
+    description: "Git tag to create and push"
+    required: true
+  message:
+    description: "Tag message/annotation"
+    required: false
+    default: "Automated release"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+
+    - name: Configure Git user
+      shell: bash
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Create tag
+      shell: bash
+      run: |
+        TAG=${{ inputs.tag }}
+        MESSAGE=${{ inputs.message }}
+
+        if git rev-parse "$TAG" >/dev/null 2>&1; then
+          echo "Tag $TAG already exists."
+        else
+          git tag -a "$TAG" -m "$MESSAGE"
+          echo "Created tag: $TAG"
+        fi
+
+    - name: Push tag
+      shell: bash
+      run: |
+        TAG=${{ inputs.tag }}
+        git push origin "$TAG"
