@@ -25,8 +25,8 @@ runs:
     - name: Create tag
       shell: bash
       run: |
-        TAG=${{ inputs.tag }}
-        MESSAGE=${{ inputs.message }}
+        TAG="${{ inputs.tag }}"
+        MESSAGE="${{ inputs.message }}"
 
         if git rev-parse "$TAG" >/dev/null 2>&1; then
           echo "Tag $TAG already exists."
@@ -34,6 +34,7 @@ runs:
           git tag -a "$TAG" -m "$MESSAGE"
           echo "Created tag: $TAG"
         fi
+
 
     - name: Push tag
       shell: bash
